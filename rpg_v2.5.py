@@ -18,6 +18,8 @@ p4 = "south"
 p5 = "stay"
 e1_path = [p2,p3,p2,p5,p5,p5,p4,p1]
 
+placed_enemys = []
+
 #map
 map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room","west":"yard","stay":"big hall","south":"bathroom"}},
        "small_hall":{"available_dir":{"west":"big_hall","south":"bedroom","east":"entrance","stay":"small_hall","north":"bedroom2"}
@@ -35,6 +37,13 @@ map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room",
        "bathroom":{"available_dir":{"north":"big_hall","stay":"bathroom"}},
        "storage":{"available_dir":{"north":"kitchen","stay":"storage"}},
        "backrooms":{"avialable_dir":{"stay":"backrooms"}}}
+
+#e types
+enemy_types = {
+    "goblin":{"min_health":30,"max_health":75,"min_attack_dmg":25,"max_attack_dmg":35,"hit_chance":0.5},
+    "skeleton":{"min_health":20,"max_health":30,"min_attack_dmg":35,"max_attack_dmg":40,"hit_chance":0.65}
+}
+
 
 #inventory
 class Inventory():
@@ -97,6 +106,10 @@ class Player:
         self.position = (map[self.position]["available_dir"][dir])
         print(f"you're in {self.position}")
         
+        #check enemys
+        for enemy in placed_enemys:
+            if enemy.position == self.position:
+                combat(self,enemy)
         
         
     #heal 
@@ -199,13 +212,35 @@ def combat(player,enemy):
             print(f"you have been defeated by the {enemy.name}")
             break
         
+#random enemy
+def ran_enemy(pos):
+    enemy_type = random.choice(list(enemy_types.keys()))
+    min_health = enemy_types[enemy_type]["min_health"]
+    max_health = enemy_types[enemy_type]["max_health"]
+    health = random.randint(min_health,max_health)
+    
+    min_attack_dmg = enemy_types[enemy_type]["min_attack_dmg"]
+    max_attack_dmg = enemy_types[enemy_type]["max_attack_dmg"]
+    attack_dmg = random.randint(min_attack_dmg,max_attack_dmg)
+    
+    print(health,pos,enemy_type,attack_dmg,enemy_types[enemy_type]["hit_chance"])
+    
+    return Enemy(health,pos,enemy_type,attack_dmg,enemy_types[enemy_type]["hit_chance"])
+
+def place_enemys(amount_enemys):
+    occ_rooms = ["front_yard"]
+    while Enemy.total_enemys < amount_enemys:
+        room = random.choice(list(map.keys()))
+        if room not in occ_rooms:
+            placed_enemys.append(ran_enemy(room))
+            occ_rooms.append(room)
+    print(placed_enemys)
 
 #player initilitation
 player = Player(100,"front_yard",psucc)
 
 #enemy initilitation
-e1 = Enemy(50,"small_hall","goblin",25,0.5)
-e2 = Enemy(25,"big_hall","mutated_rat",5,0.95)
+place_enemys(5)
 
 #story
 print("you drive round the corner and see a deer you swerve around it\n")
@@ -229,11 +264,8 @@ while True:
     #movement
     if menu_choice == "move":
         player.move()
-        if player.position == e1.position:
-            combat(player,e1)
-        elif player.position == e2.position:
-            combat(player,e2)
         
+
     #healing
     elif menu_choice == "heal":
         player.heal()
