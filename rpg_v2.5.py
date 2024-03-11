@@ -228,7 +228,7 @@ def ran_enemy(pos):
     return Enemy(health,pos,enemy_type,attack_dmg,enemy_types[enemy_type]["hit_chance"])
 
 def place_enemys(amount_enemys):
-    occ_rooms = ["front_yard"]
+    occ_rooms = ["front_yard","backrooms"]
     while Enemy.total_enemys < amount_enemys:
         room = random.choice(list(map.keys()))
         if room not in occ_rooms:
@@ -239,8 +239,28 @@ def place_enemys(amount_enemys):
 #player initilitation
 player = Player(100,"front_yard",psucc)
 
+#diffuculty
+diffuculty = str.lower(input(("input diffuculty:\n> baby , easy , meduim , hard , hellish , gamer\n")))
+if diffuculty == "baby":
+    selected_enemys = 0
+    
+elif diffuculty == "easy":
+    selected_enemys = 3
+    
+elif diffuculty == "medium":
+    selected_enemys = 5
+    
+elif diffuculty == "hard":
+    selected_enemys = 8
+    
+elif diffuculty == "hellish":
+    selected_enemys = 10
+    
+elif diffuculty == "gamer":
+    selected_enemys = 12
+
 #enemy initilitation
-place_enemys(5)
+place_enemys(selected_enemys)
 
 #story
 print("you drive round the corner and see a deer you swerve around it\n")
