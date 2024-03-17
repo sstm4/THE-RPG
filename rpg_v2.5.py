@@ -21,14 +21,18 @@ e1_path = [p2,p3,p2,p5,p5,p5,p4,p1]
 placed_enemys = []
 
 #map
-map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room","west":"yard","stay":"big hall","south":"bathroom"}},
+map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room","west":"yard","stay":"big hall","south":"bathroom"},
+        #big hall items
+        "room_items":["brown_key"]},
        "small_hall":{"available_dir":{"west":"big_hall","south":"bedroom","east":"entrance","stay":"small_hall","north":"bedroom2"}
         #small hall items
         ,"room_items":["grip_gloves"]}
        ,"feasting_room":{"available_dir":{"south":"big_hall","west":"kitchen","stay":"feasting_room"}},
        "kitchen":{"available_dir":{"east":"feasting_room","stay":"kitchen","south":"storage"}},
        "bedroom":{"available_dir":{"north":"small_hall","stay":"bedroom","west":"closet"}},
-       "yard":{"available_dir":{"east":"big_hall","south":"shed","stay":"yard"}},
+       "yard":{"available_dir":{"east":"big_hall","south":"shed","stay":"yard"},
+        #locked doors
+        "locked_doors":{"south":"brown_key"}},
        "shed":{"available_dir":{"north":"yard","stay":"shed"}},
        "front_yard":{"available_dir":{"west":"entrance","stay":"front_yard"},"room_items":["basic_sword"]},
        "entrance":{"available_dir":{"east":"front_yard","west":"small_hall","stay":"entrance"}},
@@ -101,6 +105,16 @@ class Player:
         if dir not in dir_list:
             print("invalid dir ")
             dir = "stay"
+            
+        #check locked doors
+        if dir in map[self.position].get("locked_doors",{}):
+            required_key = map[self.position]["locked_doors"][dir]
+            if required_key in self.inventory.items:
+                print(f"you unlocked the door with the {required_key}")
+                self.use_item(required_key)
+            else:
+                print(f"the door is loked you need {required_key}")
+                return
         
         #change position
         self.position = (map[self.position]["available_dir"][dir])
