@@ -1,6 +1,6 @@
 #random and time
 import random
-import time
+from rpg_menu import title
 
 #global vars
 global map
@@ -276,13 +276,18 @@ elif diffuculty == "gamer":
 #enemy initilitation
 place_enemys(selected_enemys)
 
-#story
-print("you drive round the corner and see a deer you swerve around it\n")
-input("ENTER\n")
-print("you roll down the hill and wake up in a garden\n")
-input("ENTER\n")
-print("you crawl out the broken window and realize your trapped in a garden\n")
-input("ENTER\n")
+def start() -> None:
+    #story
+    print("you drive round the corner and see a deer you swerve around it\n")
+    input("ENTER\n")
+    print("you roll down the hill and wake up in a garden\n")
+    input("ENTER\n")
+    print("you crawl out the broken window and realize your trapped in a garden\n")
+    input("ENTER\n")
+
+    title()
+    
+start()
 
 #main loop
 while True:
