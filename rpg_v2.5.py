@@ -1,6 +1,6 @@
 #random and time
 import random
-from rpg_menu import title
+from rpg_menu import *
 
 #global vars
 global map
@@ -33,7 +33,7 @@ map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room",
        "yard":{"available_dir":{"east":"big_hall","south":"shed","stay":"yard"},
         #locked doors
         "locked_doors":{"south":"brown_key"}},
-       "shed":{"available_dir":{"north":"yard","stay":"shed"}},
+       "shed":{"available_dir":{"north":"yard","stay":"shed"},"room_items":["shotgun"]},
        "front_yard":{"available_dir":{"west":"entrance","stay":"front_yard"},"room_items":["basic_sword"]},
        "entrance":{"available_dir":{"east":"front_yard","west":"small_hall","stay":"entrance"}},
        "closet":{"available_dir":{"east":"bedroom","stay":"closet"}},
@@ -154,6 +154,8 @@ class Player:
             self.attack_dmg = 50
         elif item == "grip_gloves":
             self.succ = 0.8
+        elif item == "shotgun":
+            self.attack_dmg = 100
         
     #remove item
     def use_item(self,item):
@@ -162,6 +164,10 @@ class Player:
     #stats
     def stats(self):
         print(f"you have {self.health} health left, {self.attack_dmg} attack dmg, {self.succ} success rate and youre at {self.position}")
+        
+    #help
+    def call_help(self):
+        help()
     
 #enemy class
 class Enemy:
@@ -194,7 +200,7 @@ class Enemy:
 def menu():
         
     #menu options
-    menu_options = ["move","heal","quit","items","look","pick","mario","stats"]
+    menu_options = ["move","heal","quit","items","look","pick","mario","stats","help"]
     
     #loop
     while True:
@@ -278,6 +284,7 @@ place_enemys(selected_enemys)
 
 def start() -> None:
     #story
+    player.call_help()
     print("you drive round the corner and see a deer you swerve around it\n")
     input("ENTER\n")
     print("you roll down the hill and wake up in a garden\n")
@@ -348,6 +355,10 @@ while True:
     #stats
     elif menu_choice == "stats":
         player.stats()
+        
+    #help
+    elif menu_choice == "help":
+        player.call_help()
         
     #quit
     elif menu_choice == "quit":
