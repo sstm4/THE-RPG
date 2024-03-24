@@ -44,11 +44,13 @@ map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room",
 
 #e types
 enemy_types = {
-    "goblin":{"min_health":30,"max_health":75,"min_attack_dmg":25,"max_attack_dmg":35,"hit_chance":0.5},
+    "goblin":{"min_health":30,"max_health":50,"min_attack_dmg":25,"max_attack_dmg":35,"hit_chance":0.5},
     "skeleton":{"min_health":20,"max_health":30,"min_attack_dmg":35,"max_attack_dmg":40,"hit_chance":0.65},
     "golem":{"min_health":50,"max_health":75,"min_attack_dmg":10,"max_attack_dmg":15,"hit_chance":0.5}
 }
-
+#weights
+population = ["goblin","skeleton","golem"]
+weights_ = [0.4,0.3,0.3]
 
 #inventory
 class Inventory():
@@ -234,8 +236,8 @@ def combat(player,enemy):
             break
         
 #random enemy
-def ran_enemy(pos):
-    enemy_type = random.choice(list(enemy_types.keys()))
+def ran_enemy(pos,population,weights_):
+    enemy_type = random.choices(population, weights = weights_, k = 1)[0]
     min_health = enemy_types[enemy_type]["min_health"]
     max_health = enemy_types[enemy_type]["max_health"]
     health = random.randint(min_health,max_health)
@@ -248,12 +250,12 @@ def ran_enemy(pos):
     
     return Enemy(health,pos,enemy_type,attack_dmg,enemy_types[enemy_type]["hit_chance"])
 
-def place_enemys(amount_enemys):
+def place_enemys(amount_enemys,population,weights_):
     occ_rooms = ["front_yard","backrooms"]
     while Enemy.total_enemys < amount_enemys:
         room = random.choice(list(map.keys()))
         if room not in occ_rooms:
-            placed_enemys.append(ran_enemy(room))
+            placed_enemys.append(ran_enemy(room,population,weights_))
             occ_rooms.append(room)
     print(placed_enemys)
 
@@ -284,7 +286,7 @@ def ask_diff() ->None:
 ask_diff()
 
 #enemy initilitation
-place_enemys(selected_enemys)
+place_enemys(selected_enemys,population,weights_)
 
 def start() -> None:
     #story
