@@ -6,7 +6,7 @@ from rpg_menu import *
 global map
 global psucc
 psucc = 0.5
-5
+
 #movement checker
 dir_list =[]
 
@@ -46,11 +46,12 @@ map = {"big_hall":{"available_dir":{"east":"small_hall","north":"feasting_room",
 enemy_types = {
     "goblin":{"min_health":30,"max_health":50,"min_attack_dmg":25,"max_attack_dmg":35,"hit_chance":0.5},
     "skeleton":{"min_health":20,"max_health":30,"min_attack_dmg":35,"max_attack_dmg":40,"hit_chance":0.65},
-    "golem":{"min_health":50,"max_health":75,"min_attack_dmg":10,"max_attack_dmg":15,"hit_chance":0.5}
+    "golem":{"min_health":50,"max_health":75,"min_attack_dmg":10,"max_attack_dmg":15,"hit_chance":0.5},
+    "easter_bunny":{"min_health":100,"max_health":150,"min_attack_dmg":50,"max_attack_dmg":100,"hit_chance":0.75}
 }
 #weights
-population = ["goblin","skeleton","golem"]
-weights_ = [0.4,0.3,0.3]
+population = ["goblin","skeleton","golem","easter_bunny"]
+weights_ = [0.4,0.3,0.3,0.000001]
 
 #inventory
 class Inventory():
@@ -221,16 +222,34 @@ def menu():
 
 #combat loop
 def combat(player,enemy):
+    
+    #tells plauyer enemy
     print(f"you're in the same room as {enemy.name}")
+    
+    #loop for enemy
     while player.health > 0 or enemy.health > 0:
+        
+        #buffer
         input("press ENTER to continue\n")
+        
+        #attack
         player.attack(enemy)
+        
+        #defeated enemy
         if enemy.health <= 0:
             print(f"the {enemy.name} has been defeated")
+            
+            #pos change
             enemy.position = "backrooms"
             break
+        
+        #buffer
         input("press ENTER to continue\n")
+        
+        #enemy attack
         enemy.attack(player)
+        
+        #defeated player
         if player.health <= 0:
             print(f"you have been defeated by the {enemy.name}")
             break
